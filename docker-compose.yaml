@@ -3,13 +3,16 @@ version: '3.8'
 services:
   backend:
     build: .
+    #Sobreescreve o CMD do DF e roda com o uvicorn
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
     environment:
+      #Passagem das variaveis pelo .env
       - OLLAMA_HOST=${OLLAMA_HOST}
       - OLLAMA_MODEL=${OLLAMA_MODEL}
     healthcheck:
+      #Garante que o front end somente inicie se a api tenha iniciado corretamente (status 200 ok)
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 5s
       timeout: 5s
@@ -17,11 +20,13 @@ services:
 
   frontend:
     build: .
+    #Roda o streamlit apontando para o arquivo correto do frontend
     command: streamlit run app/app_ui.py
     ports:
       - "8501:8501"
     environment:
-      - API_URL=http://backend:8000
+      #Conecta ao container do backend pela rede interna do docker
+      - API_URL=${API_URL}
     depends_on:
       backend:
-        condition: service_healthy 
+        condition: service_healthy #Espera o backend retornar 200 ok

@@ -15,5 +15,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 #Copia todo o resto do código para dentro do container
 COPY . .
 
-#Comando padrão
+#Comando padrão que será sobreescrevido pelo docker compose para usar o uvicorn
 CMD ["python", "main.py"]
