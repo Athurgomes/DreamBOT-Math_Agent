@@ -19,5 +19,5 @@ def create_agent():
     return Agent(
         model=model,
         tools=[calculator_tool],
-        system_prompt=system_prompt
+        system_prompt=system_prompt,
     )

@@ -3,7 +3,7 @@ version: '3.8'
 services:
   backend:
     build: .
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
     environment:
@@ -17,7 +17,7 @@ services:
 
   frontend:
     build: .
-    command: streamlit run app_ui.py
+    command: streamlit run app/app_ui.py
     ports:
       - "8501:8501"
     environment:

@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import os 
 
-st.set_page_config(page_title="DreamBOT - Teste Técnico", page_icon="☁️")
+st.set_page_config(page_title="DreamBOT", page_icon="☁️")
 st.title("☁️ DreamBOT")
 st.caption("Agente inteligente com capacidade matemática")
 
