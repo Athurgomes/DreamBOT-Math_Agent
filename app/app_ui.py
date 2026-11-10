@@ -24,8 +24,9 @@ if prompt := st.chat_input("Peça ao DreamBOT"):
     #Chama a API no backend
     try:
         #Busca a url da api de forma dinamica no .env (bom para alternar entre local e docker)
-        api_base_url = os.getenv("API_URL")
-        response = requests.post(f"{api_base_url}/chat", json={"message": prompt})     
+        api_base_url = os.getenv("API_URL", "http://localhost:8000")
+        #Timeout generoso: modelos locais podem demorar na primeira resposta
+        response = requests.post(f"{api_base_url}/chat", json={"message": prompt}, timeout=120)
         if response.status_code == 200:
             ai_response = response.json().get("response", "Erro na resposta.")
         else:
