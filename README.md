@@ -1,8 +1,22 @@
 # ☁️ DreamBOT - Agente de IA
 
+[![CI](https://github.com/Athurgomes/DreamBOT-Math_Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Athurgomes/DreamBOT-Math_Agent/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.13-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![Ollama](https://img.shields.io/badge/LLM-Llama%203.1%20(Ollama)-000000)
+
 Este projeto consiste em uma **API de Agente de IA** desenvolvida com **FastAPI**, capaz de interpretar linguagem natural e executar ferramentas matemáticas. A solução integra um LLM local (**Ollama**) com o **Strands Agents SDK** e possui uma interface de chat interativa desenvolvida em **Streamlit**.
 
 > **Destaques:** Arquitetura limpa (Clean Architecture), execução via Docker, proteção contra execução de código malicioso (`simpleeval`) e refinamento de Prompt.
+
+```mermaid
+flowchart LR
+    U[Usuário] --> UI[Streamlit :8501]
+    UI -->|POST /chat| API[FastAPI :8000]
+    API --> AG[Strands Agent]
+    AG <-->|raciocínio| LLM[Llama 3.1 8B via Ollama]
+    AG -->|tool call| CALC[calculator_tool<br/>simpleeval]
+```
 
 ---
 
@@ -112,6 +126,20 @@ Para testar o raciocínio do Agente diretamente na API:
 
 ---
 
+## Testes
+
+Os testes não precisam do Ollama: o agente é simulado e a calculadora é testada diretamente, inclusive contra tentativas de injeção de código.
+
+```bash
+pip install -r requirements.txt -r requirements-dev.txt
+pytest -q
+ruff check app tests
+```
+
+O CI roda lint, testes e o build da imagem Docker a cada push.
+
+---
+
 ## Decisões de Arquitetura
 
 - **Estrutura Modular:** O código foi organizado dentro do pacote `app/` separando responsabilidades:
@@ -135,7 +163,9 @@ Para testar o raciocínio do Agente diretamente na API:
 │   └── prompts/          # Arquivos de texto para System Prompts
 ├── docker-compose.yaml   # Orquestração dos containers
 ├── Dockerfile            # Imagem Python 3.13-slim otimizada
-├── requirements.txt      # Dependências limpas
+├── tests/                # Testes da API e da calculadora
+├── requirements.txt      # Dependências de runtime
+├── requirements-dev.txt  # Dependências de desenvolvimento (pytest, ruff)
 ├── .env                  # Variáveis de ambiente
 └── README.md             # Documentação
 ```
